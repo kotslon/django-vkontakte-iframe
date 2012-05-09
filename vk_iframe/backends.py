@@ -16,14 +16,16 @@ class VkontakteUserBackend(ModelBackend):
             return
 
         defaults = {}
-        username = str(vk_form.vk_user_id())
+        vk_id = vk_form.vk_user_id()
+        username = str(vk_id)
         vk_profile = vk_form.profile_api_result()
-        if vk_profile:
+        if vk_profile:            
             defaults = dict(
                 first_name=vk_profile['first_name'],
                 last_name=vk_profile['last_name'],
             )
-
+            
+        vk_profile['vk_id']=vk_id
         user, created = User.objects.get_or_create(username=username, defaults=defaults)
         if created:
             user = self.configure_user(vk_profile, user)

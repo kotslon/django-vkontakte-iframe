@@ -29,7 +29,7 @@ class CityAdmin(admin.ModelAdmin):
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ['user']
     search_fields = ['user__first_name', 'user__last_name', 'user__username',
-                     'domain', 'home_phone', 'mobile_phone']
+                     'vk_id','domain', 'home_phone', 'mobile_phone']
 
 admin.site.register(Country, CountryAdmin)
 admin.site.register(City, CityAdmin)
