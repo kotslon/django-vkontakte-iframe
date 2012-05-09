@@ -1,7 +1,7 @@
 #coding: utf-8
 from django.contrib import admin
 from vk_iframe.models import Country, City, Profile
-from django.conf import settings
+from vk_iframe.utils import get_app_id, get_app_secret
 from django.utils.translation import ugettext_lazy as _
 
 class CountryAdmin(admin.ModelAdmin):
@@ -16,7 +16,7 @@ class CityAdmin(admin.ModelAdmin):
 
     def load_from_vkontakte(self, request, queryset):
         import vkontakte
-        api = vkontakte.API(settings.VK_APP_ID, settings.VK_APP_SECRET, timeout=5)
+        api = vkontakte.API(get_app_id(), get_app_secret(), timeout=5)
         cids = ','.join([str(city.pk) for city in queryset])
         vk_data = api.getCities(cids=cids)
         for item in vk_data:

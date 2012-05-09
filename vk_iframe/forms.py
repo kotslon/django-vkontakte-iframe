@@ -3,6 +3,7 @@ from hashlib import md5
 
 from django import forms
 from django.conf import settings
+from vk_iframe.utils import get_app_id, get_app_secret
 from django.utils import simplejson as json
 from django.utils.translation import check_for_language
 
@@ -80,11 +81,11 @@ class VkontakteIframeForm(forms.Form):
     def get_auth_key(self):
         api_id = self.cleaned_data['api_id']
         viewer_id = self.cleaned_data['viewer_id']
-        api_secret = settings.VK_APP_SECRET
+        api_secret = get_app_secret()
         return md5(str(api_id) + '_' + str(viewer_id) + '_' + str(api_secret)).hexdigest()
 
     def clean_app_id(self):
-        if str(self.cleaned_data['app_id']) != str(settings.VK_APP_ID):
+        if str(self.cleaned_data['app_id']) != str(get_app_id()):
             raise forms.ValidationError(u'app_id - от другого приложения')
         return self.cleaned_data['app_id']
 
@@ -133,9 +134,9 @@ class VkontakteOpenAPIForm(forms.Form):
     last_name = forms.CharField()
 
     def get_auth_key(self):
-        api_id = settings.VK_APP_ID
+        api_id = get_app_id()
         viewer_id = self.cleaned_data['uid']
-        api_secret = settings.VK_APP_SECRET
+        api_secret = get_app_secret()
         return md5(str(api_id) + str(viewer_id) + str(api_secret)).hexdigest()
 
     def clean_hash(self):
