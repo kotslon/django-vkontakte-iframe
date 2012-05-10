@@ -32,9 +32,9 @@ Usage
 
 2. Add your app's settings to settings.py::
 
-        VK_APP_ID = '1234567'                   # Application ID
-        VK_APP_KEY = 'M1gytuHwni'               # Application key
-        VK_APP_SECRET = 'MiRFwrDYwcYFCTD18EcY'  # Secure key
+        VK_IFRAME_APP_ID = '1234567'                   # Application ID
+        VK_IFRAME_APP_KEY = 'M1gytuHwni'               # Application key
+        VK_IFRAME_APP_SECRET = 'MiRFwrDYwcYFCTD18EcY'  # Secure key
 
 3. Add 'vk_iframe' to INSTALLED_APPS
 

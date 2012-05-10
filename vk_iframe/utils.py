@@ -15,10 +15,13 @@ def get_app_id():
     from previous versions of django-vkontakte-iframe
     This is done to avoid conflicts in settings names with other django apps
     """
-    if settings.VK_IFRAME_APP_ID_SETTING:
-        return setting(settings.VK_IFRAME_APP_ID_SETTING)
-    else:
-        return settings.VK_APP_ID
+    try:
+        app_id = settings.VK_IFRAME_APP_ID
+    except AttributeError:
+        app_id = getattr(settings, 'VK_APP_ID', None)
+        warnings.warn('VK_APP_ID is deprecated, please rename to VK_IFRAME_APP_ID',
+                      DeprecationWarning)
+    return app_id
 
 def get_app_secret():
     """
@@ -27,10 +30,13 @@ def get_app_secret():
     from previous versions of django-vkontakte-iframe
     This is done to avoid conflicts in settings names with other django apps
     """
-    if settings.VK_IFRAME_APP_SECRET_SETTING:
-        return setting(settings.VK_IFRAME_APP_SECRET_SETTING)
-    else:
-        return settings.VK_APP_SECRET
+    try:
+        app_secret = settings.VK_IFRAME_APP_SECRET
+    except AttributeError:
+        app_secret = getattr(settings, 'VK_APP_SECRET', None)
+        warnings.warn('VK_APP_SECRET is deprecated, please rename to VK_IFRAME_APP_SECRET',
+                      DeprecationWarning)
+    return app_secret
 
 def get_or_create_user(vk_id,defaults=None):
     """
