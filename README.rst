@@ -106,6 +106,36 @@ Usage
    Default value is 'IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND CNT'.
    See http://www.p3pwriter.com/LRN_111.asp for the full set of tags.
 
-10. That's all. All your app's visitors are now registered and authenticated
+10. If you want to use django-vkontakte-iframe along with some other apps that
+    store account information from vkontakte, you may be interested in the 
+    folowing feature.
+
+    By default django-vkontakte-iframe creates a new user if is unable to find
+    user with given vk_id. But you can overload that behavior by helping to
+    find apropriate user in your database.
+
+    Define your own function that recieves vk_id and returns user and boolean
+    flag if found and (None, False) otherwise. For example, if you are using
+    django-social-auth for authentication on your site, it might be something
+    like this::
+
+    def get_user_by_vk_id(vk_id)::
+        user = None
+        found = True
+        try::
+            user = User.objects.get(social_auth__provider='vkontakte',
+                                    social_auth__uid=str(vk_id))
+        except ObjectDoesNotExist::
+            found = False
+        return (user, found)
+
+    Then tell django-vkontakte-iframe about your function:
+
+    VK_IFRAME_GET_VK_USER_FUNC = {
+            'module'::'myproject.mymodule.utils',
+            'function'::'get_user_by_vk_id',
+        }
+
+11. That's all. All your app's visitors are now registered and authenticated
     django users. Additional profile data is available as user.vk_profile.
 

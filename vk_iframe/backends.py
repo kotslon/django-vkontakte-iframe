@@ -19,7 +19,7 @@ class VkontakteUserBackend(ModelBackend):
         vk_id = vk_form.vk_user_id()
         username = str(vk_id)
         vk_profile = vk_form.profile_api_result()
-        if vk_profile:            
+        if vk_profile:
             defaults = dict(
                 first_name=vk_profile['first_name'],
                 last_name=vk_profile['last_name'],
@@ -27,6 +27,8 @@ class VkontakteUserBackend(ModelBackend):
             
         vk_profile['vk_id']=vk_id
         user, created = get_or_create_user(vk_id, defaults=defaults)
+        # Related discussion: 
+        # https://bitbucket.org/kmike/django-vkontakte-iframe/issue/1/add-updating-profile-info
         if created:
             user = self.configure_user(vk_profile, user)
         return user
