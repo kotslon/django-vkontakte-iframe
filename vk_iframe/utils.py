@@ -3,6 +3,12 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 
+# Importing pluggable search function defined by main project
+if hasattr(settings, 'VK_IFRAME_GET_VK_USER_FUNC'):
+    m = __import__(settings.VK_IFRAME_GET_VK_USER_FUNC['module'],
+                   fromlist=[settings.VK_IFRAME_GET_VK_USER_FUNC['module']])
+    pluggable_user_search = getattr(m, settings.VK_IFRAME_GET_VK_USER_FUNC['function'])
+
 
 # function borrowed from django-social-auth.utils
 def setting(name, default=None):
@@ -62,10 +68,7 @@ def get_or_create_user(vk_id, defaults=None):
                 user = User.objects.get(vk_profile__vk_id=vk_id)
             except ObjectDoesNotExist:
                 # Try to find user in the database YOUR way
-                m = __import__(settings.VK_IFRAME_GET_VK_USER_FUNC['module'],
-                        fromlist=[settings.VK_IFRAME_GET_VK_USER_FUNC['module']])
-                f = getattr(m, settings.VK_IFRAME_GET_VK_USER_FUNC['function'])
-                user, found = f(vk_id)
+                user, found = pluggable_user_search(vk_id)
             if found:
                 #TODO: find a better way to force profile update
                 created = True  # we want to configure vk_profile
