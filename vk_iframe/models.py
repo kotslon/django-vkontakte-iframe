@@ -38,7 +38,8 @@ class Profile(models.Model):
         (0, u'Без указания пола',),
     )
     user =          AutoOneToOneField(User, primary_key=True, related_name='vk_profile')
-    vk_id =         IntegerField(null=False, default=0, verbose_name=_(u'VKontakte internal ID'))
+    vk_id =         IntegerField(null=False, default=0, db_index=True,
+                                 verbose_name=_(u'VKontakte internal ID'))
     nickname =      CharField(u'nick', max_length=100, blank=True, null=True)
     domain =        CharField(u'Адрес в url', max_length=50, blank=True, null=True)
     sex =           IntegerField(u'Пол', blank=True, null=True, choices=GENDER_CHOICES)
