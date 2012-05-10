@@ -3,10 +3,12 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 
+
 # function borrowed from django-social-auth.utils
 def setting(name, default=None):
     """Return setting value for given name or default value."""
     return getattr(settings, name, default)
+
 
 def get_app_id():
     """
@@ -23,6 +25,7 @@ def get_app_id():
                       DeprecationWarning)
     return app_id
 
+
 def get_app_secret():
     """
     If there is a setting with the name of Vk application secret key,
@@ -38,7 +41,8 @@ def get_app_secret():
                       DeprecationWarning)
     return app_secret
 
-def get_or_create_user(vk_id,defaults=None):
+
+def get_or_create_user(vk_id, defaults=None):
     """
     Get or create auth.User
     Depends on VK_IFRAME_USERNAME_IS_VK_ID setting (True by default):
@@ -46,11 +50,12 @@ def get_or_create_user(vk_id,defaults=None):
     otherwise username is not relevant (even though it is still vk_id
     for new users) - search is done by vk_id
     """
-    if setting('VK_IFRAME_USERNAME_IS_VK_ID',True):
-        user, created = User.objects.get_or_create(username=str(vk_id), defaults=defaults)
+    if setting('VK_IFRAME_USERNAME_IS_VK_ID', True):
+        user, created = User.objects.get_or_create(username=str(vk_id),
+                                                   defaults=defaults)
     else:
         defaults['username'] = str(vk_id)
-        if hasattr(settings,'VK_IFRAME_GET_VK_USER_FUNC'):
+        if hasattr(settings, 'VK_IFRAME_GET_VK_USER_FUNC'):
             found = True
             try:
                 # Search in vk_profile first
@@ -58,22 +63,25 @@ def get_or_create_user(vk_id,defaults=None):
             except ObjectDoesNotExist:
                 # Try to find user in the database YOUR way
                 m = __import__(settings.VK_IFRAME_GET_VK_USER_FUNC['module'],
-                               fromlist=[settings.VK_IFRAME_GET_VK_USER_FUNC['module']])
-                f = getattr(m,settings.VK_IFRAME_GET_VK_USER_FUNC['function'])
+                        fromlist=[settings.VK_IFRAME_GET_VK_USER_FUNC['module']])
+                f = getattr(m, settings.VK_IFRAME_GET_VK_USER_FUNC['function'])
                 user, found = f(vk_id)
             if found:
                 #TODO: find a better way to force profile update
-                created = True # we want to configure vk_profile
+                created = True  # we want to configure vk_profile
             else:
-                user, created = User.objects.get_or_create(vk_profile__vk_id=vk_id, defaults=defaults)
+                user, created = User.objects.get_or_create(vk_profile__vk_id=vk_id,
+                                                           defaults=defaults)
         else:
-            user, created = User.objects.get_or_create(vk_profile__vk_id=vk_id, defaults=defaults)
+            user, created = User.objects.get_or_create(vk_profile__vk_id=vk_id,
+                                                       defaults=defaults)
     return (user, created)
 
-def is_vk_authenticated(user,viewer_id):
+
+def is_vk_authenticated(user, viewer_id):
     is_va = False
     if user.is_authenticated():
-        if setting('VK_IFRAME_USERNAME_IS_VK_ID',True):
+        if setting('VK_IFRAME_USERNAME_IS_VK_ID', True):
             if user.username == viewer_id:
                 is_va = True
         else:

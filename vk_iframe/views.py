@@ -4,6 +4,7 @@ from django.utils import simplejson as json
 from django.db.transaction import commit_on_success
 from vk_iframe.models import Country, City
 
+
 @commit_on_success
 def load_countries(request):
     if request.is_ajax():
@@ -14,6 +15,7 @@ def load_countries(request):
         return HttpResponse('OK')
     return HttpResponse('')
 
+
 @commit_on_success
 def load_cities(request, country_id):
     if request.is_ajax():
@@ -22,7 +24,7 @@ def load_cities(request, country_id):
             City.objects.get_or_create(id=city['cid'],
                                        defaults=dict(
                                            title=city['title'],
-                                           country_id = country_id
+                                           country_id=country_id
                                        ))
         return HttpResponse('OK')
     return HttpResponse('')

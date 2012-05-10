@@ -24,10 +24,10 @@ class VkontakteUserBackend(ModelBackend):
                 first_name=vk_profile['first_name'],
                 last_name=vk_profile['last_name'],
             )
-            
-        vk_profile['vk_id']=vk_id
+
+        vk_profile['vk_id'] = vk_id
         user, created = get_or_create_user(vk_id, defaults=defaults)
-        # Related discussion: 
+        # Related discussion:
         # https://bitbucket.org/kmike/django-vkontakte-iframe/issue/1/add-updating-profile-info
         if created:
             user = self.configure_user(vk_profile, user)
@@ -46,7 +46,9 @@ class VkontakteUserBackend(ModelBackend):
 
         city_id = vk_profile.get('city', None)
         if city_id:
-            city, created = City.objects.get_or_create(id=city_id, defaults={'country_id': country_id})
+            city, created = City.objects.get_or_create(
+                                id=city_id, defaults={'country_id': country_id}
+                            )
             user_profile.city = city
 
         user_profile.save()

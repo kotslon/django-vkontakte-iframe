@@ -34,7 +34,7 @@ class VkontakteIframeForm(forms.Form):
     api_id = forms.IntegerField()
 
     # id пользователя, со страницы которого было запущено приложение.
-    # Если приложение запущено не со страницы пользователя, то значение равно 0.
+    # Если приложение запущено не со страницы пользователя, то значение равно 0
     user_id = forms.IntegerField()
 
     # id сессии для осуществления запросов к API
@@ -82,7 +82,8 @@ class VkontakteIframeForm(forms.Form):
         api_id = self.cleaned_data['api_id']
         viewer_id = self.cleaned_data['viewer_id']
         api_secret = get_app_secret()
-        return md5(str(api_id) + '_' + str(viewer_id) + '_' + str(api_secret)).hexdigest()
+        return md5(str(api_id) + '_' + str(viewer_id) + '_'
+                   + str(api_secret)).hexdigest()
 
     def clean_app_id(self):
         if str(self.cleaned_data['app_id']) != str(get_app_id()):
@@ -93,7 +94,8 @@ class VkontakteIframeForm(forms.Form):
         correct_key = self.get_auth_key().lower()
         key = self.cleaned_data['auth_key'].lower()
         if correct_key != key:
-            raise forms.ValidationError(u'Неверный ключ авторизации: %s != %s' % (key, correct_key,))
+            raise forms.ValidationError(u'Неверный ключ авторизации: %s != %s'
+                                        % (key, correct_key,))
         return self.cleaned_data['auth_key']
 
     def vk_user_id(self):
@@ -101,7 +103,9 @@ class VkontakteIframeForm(forms.Form):
 
     def profile_api_result(self):
         # в настройках нужно указать "Первый запрос к API":
-        # method=getProfiles&uids={viewer_id}&format=json&v=3.0&fields=uid,first_name,last_name,nickname,domain,sex,bdate,city,country,timezone,photo,photo_medium,photo_big,has_mobile,rate,contacts,education
+        # method=getProfiles&uids={viewer_id}&format=json&v=3.0&fields=uid,
+        # first_name,last_name,nickname,domain,sex,bdate,city,country,timezone,
+        # photo,photo_medium,photo_big,has_mobile,rate,contacts,education
         api_result = self.cleaned_data['api_result']
         if api_result:
             return json.loads(api_result)['response'][0]
@@ -143,7 +147,8 @@ class VkontakteOpenAPIForm(forms.Form):
         correct_key = self.get_auth_key().lower()
         key = self.cleaned_data['hash'].lower()
         if correct_key != key:
-            raise forms.ValidationError(u'Неверный ключ авторизации: %s != %s' % (key, correct_key,))
+            raise forms.ValidationError(u'Неверный ключ авторизации: %s != %s'
+                                        % (key, correct_key,))
         return self.cleaned_data['hash']
 
     def vk_user_id(self):

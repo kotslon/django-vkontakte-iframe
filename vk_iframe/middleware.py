@@ -11,6 +11,7 @@ from vk_iframe.utils import is_vk_authenticated
 DEFAULT_P3P_POLICY = 'IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND CNT'
 P3P_POLICY = getattr(settings, 'VK_P3P_POLICY', DEFAULT_P3P_POLICY)
 
+
 class AuthenticationMiddleware(object):
 
     def process_request(self, request):
@@ -29,8 +30,8 @@ class AuthenticationMiddleware(object):
             return
 
         # пользователь уже залогинен под тем же именем
-        if is_vk_authenticated(request.user,request.GET['viewer_id']):
-            return        
+        if is_vk_authenticated(request.user, request.GET['viewer_id']):
+            return
 
         # пользователь не залогинен или залогинен под другим именем
         vk_form = VkontakteIframeForm(request.GET)
@@ -53,8 +54,10 @@ class IFrameFixMiddleware(object):
 
     def process_request(self, request):
         """
-        Safari and Opera default security policies restrict cookie setting in first request in iframe.
-        Solution is to create hidden form to preserve GET variables and REPOST it to current URL.
+        Safari and Opera default security policies restrict cookie setting in
+        first request in iframe.
+        Solution is to create hidden form to preserve GET variables and REPOST
+        it to current URL.
 
         Inspired by https://gist.github.com/796811 and https://gist.github.com/1511039.
         """
@@ -95,4 +98,6 @@ class LoginRequiredMiddleware(object):
             for url in PUBLIC_URLS:
                 if re.match(url, path):
                     return
-            return HttpResponseForbidden(render_to_response(['vk_iframe/403.html', '403.html', 'vk_iframe/default/403.html']))
+            return HttpResponseForbidden(render_to_response([
+                                         'vk_iframe/403.html', '403.html',
+                                         'vk_iframe/default/403.html']))
