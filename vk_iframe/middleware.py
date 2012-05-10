@@ -6,6 +6,7 @@ from django.http import HttpResponseForbidden, HttpResponse
 from django.conf import settings
 from django.shortcuts import render_to_response
 from vk_iframe.forms import VkontakteIframeForm
+from vk_iframe.utils import is_vk_authenticated
 
 DEFAULT_P3P_POLICY = 'IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND CNT'
 P3P_POLICY = getattr(settings, 'VK_P3P_POLICY', DEFAULT_P3P_POLICY)
@@ -28,9 +29,8 @@ class AuthenticationMiddleware(object):
             return
 
         # пользователь уже залогинен под тем же именем
-        if request.user.is_authenticated():
-            if request.user.username == request.GET['viewer_id']:
-                return
+        if is_vk_authenticated(request.user,request.GET['viewer_id']):
+            return        
 
         # пользователь не залогинен или залогинен под другим именем
         vk_form = VkontakteIframeForm(request.GET)

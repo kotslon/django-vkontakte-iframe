@@ -1,7 +1,7 @@
 #coding: utf-8
 from django.contrib.auth.backends import ModelBackend
-from django.contrib.auth.models import User
 from vk_iframe.models import City, Country
+from vk_iframe.utils import get_or_create_user
 
 
 class VkontakteUserBackend(ModelBackend):
@@ -26,7 +26,7 @@ class VkontakteUserBackend(ModelBackend):
             )
             
         vk_profile['vk_id']=vk_id
-        user, created = User.objects.get_or_create(username=username, defaults=defaults)
+        user, created = get_or_create_user(vk_id, defaults=defaults)
         if created:
             user = self.configure_user(vk_profile, user)
         return user
