@@ -119,22 +119,22 @@ Usage
     django-social-auth for authentication on your site, it might be something
     like this::
 
-    def get_user_by_vk_id(vk_id)::
-        user = None
-        found = True
-        try::
-            user = User.objects.get(social_auth__provider='vkontakte',
-                                    social_auth__uid=str(vk_id))
-        except ObjectDoesNotExist::
-            found = False
-        return (user, found)
+        def get_user_by_vk_id(vk_id):
+            user = None
+            found = True
+            try:
+                user = User.objects.get(social_auth__provider='vkontakte',
+                                        social_auth__uid=str(vk_id))
+            except ObjectDoesNotExist:
+                found = False
+            return (user, found)
 
-    Then tell django-vkontakte-iframe about your function:
+    Then tell django-vkontakte-iframe about your function::
 
-    VK_IFRAME_GET_VK_USER_FUNC = {
-            'module'::'myproject.mymodule.utils',
-            'function'::'get_user_by_vk_id',
-        }
+        VK_IFRAME_GET_VK_USER_FUNC = {
+                'module':'myproject.mymodule.utils',
+                'function':'get_user_by_vk_id',
+            }
 
 11. That's all. All your app's visitors are now registered and authenticated
     django users. Additional profile data is available as user.vk_profile.
